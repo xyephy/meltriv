@@ -28,4 +28,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	b.Handle("/hello", func(m *tb.Message) {
+		b.Send(m.Sender, "Hi!")
+	})
 }
