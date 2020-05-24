@@ -1,2 +1,3 @@
-web: /github.com/meltriv 
+web:go run ../meltriv/main.go
+
 
