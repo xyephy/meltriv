@@ -1,5 +1,8 @@
-module github.com/meltriv
+module github.com/xyephy/meltriv
 
 go 1.14
 
-require gopkg.in/tucnak/telebot.v2 v2.0.0-20200522115256-76430783a7a2
+require (
+	github.com/pkg/errors v0.9.1 // indirect
+	gopkg.in/tucnak/telebot.v2 v2.0.0-20200522115256-76430783a7a2 // indirect
+)
