@@ -30,6 +30,6 @@ func main() {
 	}
 
 	b.Handle("/hello", func(m *tb.Message) {
-		b.Send(m.Sender, "You entered: "+m.Payload)
+		b.Send(m.Sender, "You entered "+m.Payload)
 	})
 }
