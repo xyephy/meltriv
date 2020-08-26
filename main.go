@@ -1,35 +1,51 @@
 package main
+//import "fmt"
 
 import (
 	"log"
-	"os"
-
-	tb "gopkg.in/tucnak/telebot.v2"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
+const token = "TELEGRAM_TOKEN"
+
 func main() {
-	var (
-		port      = os.Getenv("PORT")
-		publicURL = os.Getenv("PUBLIC_URL") // you must add it to your config vars
-		token     = os.Getenv("TOKEN")      // you must add it to your config vars
-	)
 
-	webhook := &tb.Webhook{
-		Listen:   ":" + port,
-		Endpoint: &tb.WebhookEndpoint{PublicURL: publicURL},
-	}
-
-	pref := tb.Settings{
-		Token:  token,
-		Poller: webhook,
-	}
-
-	b, err := tb.NewBot(pref)
+	// Connect to Bot via Token
+	bot, err := tgbotapi.NewBotAPI(token)
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
-	b.Handle("/hello", func(m *tb.Message) {
-		b.Send(m.Sender, "You entered "+m.Payload)
-	})
+	bot.Debug = true
+
+	log.Printf("Authorized on account %s", bot.Self.UserName)
+	u := tgbotapi.NewUpdate(0)
+	u.Timeout = 60
+	updates, err := bot.GetUpdatesChan(u)
+
+	for update := range updates {
+		if update.Message == nil {
+			bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "NOT FOUND"))
+			continue
+		}
+
+	 //var userID = update.Message.From.ID
+	//var user = userID
+
+	//log.Printf("[%d] %s", userID, update.Message.Text)
+	//log.Printf("Command: %s", update.Message.Command())
+
+	switch update.Message.Command() {
+		case "start":
+			//cache[userID] = UserConfigurations{page:1}
+			//cache[userID].resetFilter(userID)
+			name := update.Message.From.UserName
+			if update.Message.From.FirstName != "" {
+				name = update.Message.From.FirstName
+			}
+			reply := "Hey " + name + ", welcome to Telegram. karibu sana"
+			msg := tgbotapi.NewMessage(update.Message.Chat.ID, reply)
+			bot.Send(msg)
+		}
+	}
 }
